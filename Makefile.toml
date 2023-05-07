@@ -1,0 +1,60 @@
+# Clean
+[tasks.clean]
+command = "cargo"
+args = ["clean"]
+
+# Test
+[tasks.test]
+command = "cargo"
+args = ["test"]
+
+# Format
+
+## Check
+[tasks.rust-fmt-check]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--check"]
+
+[tasks.toml-fmt-check]
+install_crate = { crate_name = "taplo-cli", binary = "taplo", test_arg = "--help" }
+command = "taplo"
+args = ["fmt", "--check", "*.toml"]
+
+[tasks.md-fmt-check]
+command = "markdownlint"
+args = ["*.md", "--config", ".markdownlint.jsonc"]
+
+[tasks.fmt-check]
+dependencies = ["rust-fmt-check", "toml-fmt-check", "md-fmt-check"]
+
+## Fix
+[tasks.rust-fmt-fix]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt"]
+
+[tasks.toml-fmt-fix]
+install_crate = { crate_name = "taplo-cli", binary = "taplo", test_arg = "--help" }
+command = "taplo"
+args = ["fmt", "*.toml"]
+
+[tasks.md-fmt-fix]
+command = "markdownlint"
+args = ["*.md", "--config", ".markdownlint.jsonc", "--fix"]
+
+[tasks.fmt-fix]
+dependencies = ["rust-fmt-fix", "toml-fmt-fix", "md-fmt-fix"]
+
+# Build
+[tasks.release]
+dependencies = ["clean"]
+command = "cargo"
+args = ["build", "--release"]
+
+# Final
+[tasks.build]
+dependencies = ["fmt-fix", "test"]
+
+[tasks.ci]
+dependencies = ["fmt-check", "test", "release"]

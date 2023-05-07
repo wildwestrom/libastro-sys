@@ -3,7 +3,6 @@ extern crate bindgen;
 use std::{env, path::PathBuf};
 
 use bindgen::CargoCallbacks;
-use make_cmd;
 
 fn main() {
 	let libdir_path = PathBuf::from("libastro")
